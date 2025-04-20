@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Jarvis AI Chatbot</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <h1>HEY,  J.A.R.V.I.S</h1>
+  <h3>What can I do for you today, Sir?</h3>
+  <h5>At your service. Your personal assistant. From Iron Man</h5>
+
+  <div id="chat"></div>
+
+  <div style="display: flex; align-items: center;">
+    <input type="text" id="message" placeholder="Ask a question" autofocus>
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <script>
+    async function sendMessage() {
+      const input = document.getElementById("message");
+      const chat = document.getElementById("chat");
+      const message = input.value.trim();
+      if (!message) return;
+
+      chat.innerHTML += `<div class="user"><strong>You:</strong> ${message}</div>`;
+      input.value = "";
+
+      const res = await fetch("/ask", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ message })
+      });
+
+      const data = await res.json();
+      chat.innerHTML += `<div class="bot"><strong>Jarvis:</strong> ${data.reply}</div>`;
+      chat.scrollTop = chat.scrollHeight;
+    }
+  </script>
+
+</body>
+</html>

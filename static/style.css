@@ -1,0 +1,123 @@
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes spin {
+  from { --angle: 0deg; }
+  to { --angle: 360deg; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 5px #00ffff; }
+  50% { box-shadow: 0 0 15px #00ffffaa; }
+}
+
+@keyframes boot {
+  0% { opacity: 0; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+body {
+  margin: 0;
+  padding: 20px;
+  background-color: #0d0d0d;
+  color: #00ffff;
+  font-family: 'Orbitron', sans-serif;
+  background-image: repeating-linear-gradient(0deg, transparent, transparent 49px, rgba(0, 255, 255, 0.05) 50px),
+                    repeating-linear-gradient(90deg, transparent, transparent 49px, rgba(0, 255, 255, 0.05) 50px);
+  animation: boot 1.2s ease-in-out;
+}
+h1{
+  font-size: 90px;
+}
+h1, h5 {
+  text-align: center;
+  margin-bottom: 10px;
+  animation: fadeIn 0.8s ease-in-out;
+  padding-bottom: 10px;
+}
+h3{
+  text-align: center;
+  margin-bottom: 0;
+  animation: fadeIn 0.8s ease-in-out;
+}
+#chat {
+  background-color: #1a1a1a;
+  border: 2px solid #00ffff;
+  border-radius: 10px;
+  padding: 10px;
+  height: 400px;
+  overflow-y: auto;
+  box-shadow: 0 0 30px #00ffff33;
+  margin-bottom: 10px;
+  position: relative;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.user, .bot {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 8px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.user {
+  background-color: #001f2e;
+  border-left: 4px solid #00bfff;
+}
+
+.bot {
+  background-color: #002b36;
+  border-left: 4px solid #00ffff;
+}
+
+input[type="text"] {
+  width: 65%;
+  padding: 10px;
+  border: 1px solid #00ffff;
+  background-color: #0d0d0d;
+  color: #00ffff;
+  border-radius: 5px;
+  outline: none;
+  font-size: 16px;
+  animation: pulse 2s infinite;
+  box-shadow: 0 0 10px #00ffff33;
+}
+
+button {
+  padding: 10px 20px;
+  margin-left: 10px;
+  background-color: #00bfff;
+  border: none;
+  color: #0d0d0d;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: 0 0 10px #00ffff88;
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  background-color: #00ffff;
+  color: #000;
+}
+
+#mic {
+  margin-left: 10px;
+  background-color: transparent;
+  border: 2px solid #00ffff;
+  border-radius: 50%;
+  padding: 10px;
+  cursor: pointer;
+  animation: pulse 1.5s infinite;
+  color: #00ffff;
+  font-size: 20px;
+}
