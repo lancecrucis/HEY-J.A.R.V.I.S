@@ -5,9 +5,10 @@ import google.generativeai as genai
 
 app = Flask(__name__)
 
-# Gemini API config
+# set up Gemini API key
 genai.configure(api_key="AIzaSyA7oGEzmDkkCjB0AEilKqm3xdR-ANtDh7o")
 
+# basic generation settings for the responses
 generation_config = {
     "temperature": 0.5,
     "top_p": 0.95,
@@ -16,6 +17,7 @@ generation_config = {
     "response_mime_type": "text/plain",
 }
 
+# create the model w/ the system prompt
 model = genai.GenerativeModel(
     model_name="gemini-1.5-pro",
     generation_config=generation_config,
@@ -32,51 +34,52 @@ model = genai.GenerativeModel(
     """,
 )
 
-# 🗣️ Text-to-Speech Function
+# speak out loud the text given
 def SpeakText(text):
     engine = pyttsx3.init()
     voices = engine.getProperty('voices')
     
+    # look for a male voice (not always guaranteed tho)
     for voice in voices:
         if "male" in voice.name.lower():
             engine.setProperty('voice', voice.id)
             break
 
-    engine.setProperty('rate', 180)  # speaking speed
+    engine.setProperty('rate', 180)  # not too fast
     engine.say(text)
     engine.runAndWait()
 
-# In-memory chat history (optional: replace with DB later)
+# just using a dict to store user sessions, not using DB yet
 chat_sessions = {}
 
 @app.route("/")
 def home():
-    return render_template("chat.html")
+    return render_template("chat.html")  # basic homepage template
 
 @app.route("/ask", methods=["POST"])
 def ask():
-    user_id = request.json.get("user_id", "default_user")
+    user_id = request.json.get("user_id", "default_user")  # fallback if no user_id
     user_message = request.json.get("message", "")
 
     try:
-        # Create a session if it doesn't exist
+        # start a new chat session if not there already
         if user_id not in chat_sessions:
             chat_sessions[user_id] = model.start_chat(history=[])
         
         chat_session = chat_sessions[user_id]
 
-        # Special phrase trigger
+        # if the kid says this phrase, return preset response
         if user_message.lower() == "i'm home":
             response_text = "Welcome home! Ready to help with your homework or play some fun games?"
         else:
             response = chat_session.send_message(user_message)
             response_text = response.text
 
-        # Soft jogging reminder
+        # casual jogging reminder if the msg mentions jogging
         if "6pm" in user_message.lower() or "jog" in user_message.lower():
             response_text += "\n\nRemember, it's good to go jogging at 6pm! It keeps you healthy and strong!"
 
-        # 🔊 Speak the response
+        # speak it out loud for them
         SpeakText(response_text)
 
         return jsonify({"reply": response_text})
@@ -87,4 +90,4 @@ def ask():
 
 if __name__ == "__main__":
     print("System online and ready to help!")
-    app.run(debug=True)
+    app.run(debug=True)  # runs on localhost:5000 by default
